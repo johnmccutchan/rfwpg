@@ -233,6 +233,7 @@ class RFWTreeTile extends StatefulWidget {
 class _RFWTreeTileState extends State<RFWTreeTile> {
   late InlineSpan titleSpan;
 
+  TextStyle? defaultStyle;
   TextStyle? dimStyle;
   TextStyle? highlightStyle;
 
@@ -258,6 +259,7 @@ class _RFWTreeTileState extends State<RFWTreeTile> {
   void setupTextStyles() {
     final TextStyle style = DefaultTextStyle.of(context).style;
     final Color highlightColor = Theme.of(context).colorScheme.primary;
+    defaultStyle = style;
     highlightStyle = style.copyWith(
       color: highlightColor,
       decorationColor: highlightColor,
@@ -270,7 +272,7 @@ class _RFWTreeTileState extends State<RFWTreeTile> {
     final String title = widget.entry.node.title;
 
     if (widget.searchPattern == null) {
-      return TextSpan(text: title);
+      return TextSpan(text: title, style: defaultStyle);
     }
 
     final List<InlineSpan> spans = <InlineSpan>[];
@@ -284,13 +286,13 @@ class _RFWTreeTileState extends State<RFWTreeTile> {
         return '';
       },
       onNonMatch: (String text) {
-        spans.add(TextSpan(text: text));
+        spans.add(TextSpan(text: text, style: defaultStyle));
         return '';
       },
     );
 
     if (hasAnyMatches) {
-      return TextSpan(children: spans);
+      return TextSpan(children: spans, style: defaultStyle);
     }
 
     return TextSpan(text: title, style: dimStyle);
